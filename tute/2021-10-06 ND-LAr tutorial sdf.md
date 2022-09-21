@@ -43,27 +43,23 @@ ssh <slac-username>@sdf-login.slac.stanford.edu
 This will ask for your windows active directory password. If you have both a windows and unix account with slac, this should put you on the login node.
 
 ##### Working areas
-You can make working areas for yourself if you need to keep files on the Wilson Cluster.  The storage space is fairly limited, however, so anything you want to keep long-term should be transferred to your `/dune/data/users` area on a GPVM.  (See [Wilson Cluster Filesystems](https://computing.fnal.gov/wilsoncluster/) for more.)
+You can make working areas for yourself if you need to keep files on sdf.  The storage space is fairly limited, however.
 You can make a subdirectory for yourself at:
-`/work1/dune/users/<your principal>`
-
-***Note***: some users have had permissions issues.  For the purposes of this tutorial I've made a directory `/work1/dune/users/jwolcott/shared/` which you should be able to use as a temporary work dir.  You'll have to make the appropriate substitutions below.
-
-Be sure to read the guide on filesystems above so you know what you can put where.
-(You are also allowed to make a directory `/wclustre/dune/<your principal>` if you need a place to store big files, but beware: it's designed for large files *only*.)
+`/gpfs/slac/staas/fs1/g/neutrino/$USER`
 
 ##### Software setup
 You'll want to grab a couple of software packages to be able to run the reco.
 
 Put these in a "home" area inside the stub you made in the previous section:
 ```
-export APP_DIR=/work1/dune/users/<your principal>/home   # or see above for SLAC SDF
+export APP_DIR=/gpfs/slac/staas/fs1/g/neutrino/$USER
 mkdir -p APP_DIR
 ```
 
 First, copy my edition of `lartpc_mlreco3d`.  (This fork is a bit behind the latest version from the main `lartpc_mlreco3d` shown in the past couple of days.  The main reason is that there's a big shift in the underlying software that isn't fully finished yet.)
 
 ```
+mkdir $APP_DIR
 cd $APP_DIR
 git clone https://github.com/chenel/lartpc_mlreco3d.git
 cd lartpc_mlreco3d
