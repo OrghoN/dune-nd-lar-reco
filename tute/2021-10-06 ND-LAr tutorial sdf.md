@@ -53,7 +53,6 @@ You'll want to grab a couple of software packages to be able to run the reco.
 Put these in a "home" area inside the stub you made in the previous section:
 ```
 export APP_DIR=/gpfs/slac/staas/fs1/g/neutrino/$USER
-mkdir -p APP_DIR
 ```
 
 First, copy my edition of `lartpc_mlreco3d`.  (This fork is a bit behind the latest version from the main `lartpc_mlreco3d` shown in the past couple of days.  The main reason is that there's a big shift in the underlying software that isn't fully finished yet.)
@@ -74,46 +73,36 @@ git clone https://github.com/chenel/dune-nd-lar-reco.git
 ```
 
 ##### Getting a worker node allocation
-To actually *do* anything you'll need to start a job on a worker node in the cluster.  The WC uses SLURM for scheduling; you can see the [WC SLURM documentation](https://computing.fnal.gov/wilsoncluster/slurm-job-scheduler/) for full details.  (If you're using the SLAC SDF system, see Kazu's tutorial notes for how to get a session instead of following the instructions below.) 
+To actually *do* anything you'll need to start a job on a compute node in the cluster.  The sdf uses SLURM for scheduling.
 
 For our purposes today, the following (run from the login node) should be sufficient:
-```bash
-#srun --unbuffered --pty -A dune --partition=gpu_gce \
-#srun --unbuffered --pty -A dune --partition=neutrino \
-srun --unbuffered --pty -A dune --partition=shared \
-      --time=08:00:00 \
-      --nodes=1 --ntasks-per-node=1 --gres=gpu:v100:1 \
-      --cpus-per-task=3 /bin/bash
-```
 
 ```bash
-srun --unbuffered --time=08:00:00 --nodes=1 --ntasks-per-node=1 -A shared -p shared -n 1 --gpus v100:1 --pty /bin/bash
+srun --unbuffered --time=08:00:00 --nodes=1 --ntasks-per-node=1 --cpus-per-task=3 -A shared -p shared -n 1 --gpus v100:1 --pty /bin/bash
 ```
 
-After a few moments, this should get you an interactive shell on a worker node (you'll note the hostname in the prompt changes from `wc` to `wcgpu0X`).  If (like me) you see some errors about your home directory not being accessible, that's ok; your home area is not generally accessible from the worker nodes because your Kerberos ticket won't be forwarded.  It may take a bit if the GPUs are heavily subscribed --- there are only 8 that are compatible with our container.
+After a few moments, this should get you an interactive shell on a compute node 
 
 *Don't close this session* (or let your internet connection drop) until you're done for the day, if you can help it---if you do, your job will die and you'll have to start over.
 
 ##### Container setup
 The ND-LAr reco has a number of dependencies that are a pain to set up.  Fortunately the SLAC group distributes Docker images that contain everything you need.
-I've already grabbed one and made it available on WC.  (If you're using SLAC SDF's web interface, you'll open this container automatically when you start a shell within the web interface and don't need the instructions in this section at all.)
+
 Once you have an open interactive shell on a worker node (see above), you can start up the container by doing the following:
 
 ```bash
-# set up the container software
-module load singularity
-
 # start the container
-export SCRATCH=/scratch/work  # or see above for SLAC SDF
+export SCRATCH=/scratch/$USER
 mkdir $SCRATCH
 export SINGULARITY_CACHEDIR=$SCRATCH/.singularity
+mkdir $SINGULARITY_CACHEDIR
 export SINGULARITY_LOCALCACHEDIR=$SINGULARITY_CACHEDIR
-singularity shell --userns --nv \
+singularity shell --nv \
   --workdir=$SCRATCH \
   --home=$APP_DIR \
-  -B /wclustre -B $SCRATCH \
-  /work1/dune/users/jwolcott/larcv2:ub20.04-cuda11.0-pytorch1.7.1-larndsim
-```
+  -B $SCRATCH \
+  /gpfs/slac/staas/fs1/g/neutrino/jwolcott/images/ub20.04-cuda11.0-pytorch1.7.1-larndsim.sif
+  ```
 
 At this point you should be inside the Singularity container (your prompt will probably change to `Singularity>` to let you know).
 
