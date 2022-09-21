@@ -28,30 +28,19 @@ As was mentioned yesterday, to make full use of the ML reco toolkit (*especially
   - Heavily subscribed, so availability is highly variable
   - Maximum slot time is 8h (serious training usually takes longer than this)
 
-For the purpose of this tutorial, I've provided instructions for using the Wilson Cluster, since it won't require any preliminary access clearance if you didn't get it already (unlike, e.g., SLAC).
+For the purpose of this tutorial, I've provided instructions for using sdf command line. This assumes you are sshing into sdf instead of using the web interface with jupyter.
 
-If you do have SLAC access, and you want to run things there, you'll need to use some alternate settings in the instructions below:
-* If you use the Jupyter web interface to SDF, you'll want to pick "Custom Singularity Image" when you start your session.  Under "Commands to initiate Jupyter", change `SINGULARITY_IMAGE_PATH` to the container below.
-* "home" area: probably you want to use `APP_DIR=/gpfs/slac/staas/fs1/g/neutrino/$USER`
-* "scratch" area: use `SCRATCH=/scratch/$USER`
-
-The items I'm providing have been copied there too:
-* container: `/gpfs/slac/staas/fs1/g/neutrino/jwolcott/images/ub20.04-cuda11.0-pytorch1.7.1-larndsim.sif`
-* trained weights:
-  - singles: `SINGLES_WGTS=/gpfs/slac/staas/fs1/g/neutrino/jwolcott/data/dune/nd/nd-lar-reco/train/track+showergnn-380Kevs-15Kits-batch32/snapshot-1499.ckpt`
-  - pileup: `PILEUP_WGTS=/gpfs/slac/staas/fs1/g/neutrino/jwolcott/data/dune/nd/nd-lar-reco/train/track+intergnn-1400evs-1000Kits-batch8/snapshot-49.ckpt`
-* input files:
-  - singles: `SINGLES_INPUT=/gpfs/slac/staas/fs1/g/neutrino/jwolcott/data/dune/nd/nd-lar-reco/supera/geom-20210623/neutrino.0.larcv.root`
-  - pileup: `PILEUP_INPUT=/gpfs/slac/staas/fs1/g/neutrino/jwolcott/data/dune/nd/nd-lar-reco/supera/geom-20210405-pileup/FHC.1000001.larcv.root`
-
-#### Getting set up on the Wilson Cluster
+#### Getting set up on the sdf cluster
 
 ##### Login
-Everybody who has a DUNE Fermilab computing account with a Kerberos principal should in principle be able to log into the Wilson Cluster.  Try it:
+Everyone with a SLAC windows active directory account will be able to login tosdf. If you don't have a windows active directory account but do have a SLAC unix account, yoou can get a windows active directory account [here](https://webauth.slac.stanford.edu/login-auto?RT=YysmRHPVgfWfUjm7BE9QcON81RsYF%20N%2FFk9YP%2FFiBJx4W%202s2N7i4Bbw99zUItDBUrk2aFxGLBoybhn5QFB3AM7FvxboOqSEiXMyFe5hFPhtDtguNArlV80HhTfEoXXpW5XikU6TX805hnVyksD6rKVXkVnf1WXdx4W2w5cmClR5LqpJLPyS9VE4D0eSLIx1VTD5yBpdtVAnYM8zSS%2FiHQ7%20ltjNB2QexaPDTP0fYeIYU1GTF8vtgLFesk7bKGRN%20J%20nSN5NYS%2FLh6nxtVjU87kN8fKigfyXZp0sR4tOR627EqW5;ST=Yyq8ky87SYbwhgvFfQVOAnG4itnW%2Fm7T15NUM0ZKq%2FMId65OXTbSdTOpSBxiyKXHCkFCIEGwGfU7Ggy4adW6prQhfrUVaVgZKgID%2FkfmzCo4wzEN1ZcXximN5LXqHhxVor21pDLWiDnhIjzrM8LxQeX%20y1rMFB3QfQcu%20Cm1uZHA1CwJ2yINH7%20VfKzaCKnpTKWETdOihiUvkdZznU1RBQnWgKU%3D;test_cookie=1n)
+
+To get more information about using sdf, you can look at [the documentation](https://github.com/slaclab/sdf-docs/blob/master/getting-started.md)
+
 ```
-ssh <kerberos principal>@wc.fnal.gov
+ssh <slac-username>@sdf-login.slac.stanford.edu
 ```
-This should put you on the login node.
+This will ask for your windows active directory password. If you have both a windows and unix account with slac, this should put you on the login node.
 
 ##### Working areas
 You can make working areas for yourself if you need to keep files on the Wilson Cluster.  The storage space is fairly limited, however, so anything you want to keep long-term should be transferred to your `/dune/data/users` area on a GPVM.  (See [Wilson Cluster Filesystems](https://computing.fnal.gov/wilsoncluster/) for more.)
