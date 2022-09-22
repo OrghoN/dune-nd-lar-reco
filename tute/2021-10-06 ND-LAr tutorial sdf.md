@@ -100,7 +100,7 @@ export SINGULARITY_LOCALCACHEDIR=$SINGULARITY_CACHEDIR
 singularity shell --nv \
   --workdir=$SCRATCH \
   --home=$APP_DIR \
-  -B $SCRATCH \
+    -B /gpfs/slac/staas/fs1/g/neutrino/jwolcott/data/dune/nd/nd-lar-reco -B $SCRATCH \
   /gpfs/slac/staas/fs1/g/neutrino/jwolcott/images/ub20.04-cuda11.0-pytorch1.7.1-larndsim.sif
   ```
 
@@ -135,9 +135,8 @@ Refer to the [`README`](https://github.com/chenel/dune-nd-lar-reco#readme) insid
 
 Here's an example that should run in your WC environment:
 ```bash
-# see top of file for alternate file locations on SLAC SDF
-SINGLES_WGTS=/wclustre/dune/jwolcott/dune/nd/nd-lar-reco/train/track+showergnn-380Kevs-15Kits-batch32/snapshot-1499.ckpt
-SINGLES_INPUT=/wclustre/dune/jwolcott/dune/nd/nd-lar-reco/supera/singles/neutrino.0.larcv.root
+SINGLES_WGTS=/gpfs/slac/staas/fs1/g/neutrino/jwolcott/data/dune/nd/nd-lar-reco/train/track+showergnn-380Kevs-15Kits-batch32/snapshot-1499.ckpt
+SINGLES_INPUT=/gpfs/slac/staas/fs1/g/neutrino/jwolcott/data/dune/nd/nd-lar-reco/supera/geom-20210623/neutrino.0.larcv.root
 python3 RunChain.py --config_file $APP_DIR/dune-nd-lar-reco/configs/config.inference.fullchain-singles.yaml \
                     --model_file $SINGLES_WGTS \
                     --batch_size 1 \
